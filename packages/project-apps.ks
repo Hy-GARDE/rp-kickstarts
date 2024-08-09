@@ -6,6 +6,7 @@ NetworkManager-ppp
 NetworkManager-wwan
 hygarde-bsp-config
 postgresql-server
+iproute-tc
 %end
 
 %post --log /tmp/post-postgresql
