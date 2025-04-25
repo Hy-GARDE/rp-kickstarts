@@ -8,6 +8,10 @@ part /data  	--fstype ext4 --size 500                --label=data     --fsoption
 
 %post --nochroot --logfile=/mnt/sysroot/tmp/post-fstab.log --erroronfail
 
+echo "Adapting rootfs partition to support verity features..."
+PART=$(blkid /dev/mapper/Redpesk-OS* | grep "LABEL=.rootfs" | cut -f1 -d:)
+tune2fs -O verity $PART
+
 echo "Setting UUID into /etc/fstab..."
 grep "^/dev.*Redpesk*" /mnt/sysroot/etc/fstab | while read part ; do
 	dev=$(echo $part | cut -d' ' -f1)
