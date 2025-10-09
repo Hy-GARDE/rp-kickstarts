@@ -11,4 +11,5 @@ uboot
 solidrun-firmware
 optee-os
 optee-client
+optee-test
 %end
