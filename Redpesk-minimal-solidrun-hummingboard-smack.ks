@@ -5,3 +5,5 @@
 
 # Disabling bootloader for ARM images
 bootloader --location=none --disabled
+
+# See packages/* files for HYGARDE apps + bindings setup

@@ -1,8 +1,9 @@
 %packages --ignoremissing --nocore --exclude-weakdeps
-file
-gdb
-htop
-lsof
-ltrace
-strace
+# No dev tools for HYGARDE production image
+# file
+# gdb
+# htop
+# lsof
+# ltrace
+# strace
 %end

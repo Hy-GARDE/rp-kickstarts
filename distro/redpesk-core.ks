@@ -71,7 +71,6 @@ glibc-langpack-en
 redpesk-repos
 redhat-rpm-config
 platform-firstboot
-wget
 dnf
 dracut-redpesk-common
 #hack: needed by dnf
