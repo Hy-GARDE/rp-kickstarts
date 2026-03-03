@@ -10,7 +10,7 @@ part /var/log  	--fstype ext4 --size 2048   --label=logs    --fsoptions="noatime
 part /data  	--fstype ext4 --size 6144   --label=data    --fsoptions="noatime,nodev,nosuid,noexec,rw"
 
 # enable fsverify and rewrite /etc/fstab UUIDs
-%post --nochroot --logfile=/mnt/sysroot/tmp/post-fstab.log --erroronfail
+%post --nochroot --logfile=/tmp/post-fsverity.log --erroronfail
 echo "Adapting rootfs partition to support verity features..."
 tune2fs -O verity $(blkid /dev/mapper/Redpesk-OS* | grep "LABEL=.rootfs" | cut -f1 -d:)
 # FIXME tune2fs -O verity $(blkid /dev/mapper/Redpesk-OS* | grep "LABEL=.usr" | cut -f1 -d:)
@@ -18,8 +18,25 @@ tune2fs -O verity $(blkid /dev/mapper/Redpesk-OS* | grep "LABEL=.rootfs" | cut -
 tune2fs -O verity $(blkid /dev/mapper/Redpesk-OS* | grep "LABEL=.data" | cut -f1 -d:)
 %end
 
-# Set UUID in /etc/fstab
-%post --nochroot --logfile=/mnt/sysroot/tmp/post-fstab.log --erroronfail
+# Setup boot.scr used by uboot
+# /dev/mmcblk1p2 match partition / defined above
+%post --logfile=/tmp/post-uboot-bootscr.log --erroronfail
+echo "Boot into normal mode..."
+cat <<'EOF' > /boot/bootscript.txt
+setenv mmcdev 1
+setenv mmcpart 1
+setenv mmcroot /dev/mmcblk1p2 rootwait rw
+setenv bootargs ${jh_clk} console=${console} root=${mmcroot} security=smack nohz_full=2 irqaffinity=0-1,3 rcu_nocbs=2 rcu_nocb_poll nosoftlockup
+load mmc ${mmcdev}:${mmcpart} ${loadaddr} Image
+load mmc ${mmcdev}:${mmcpart} ${fdt_addr_r} imx8mp-hummingboard-pulse.dtb
+booti ${loadaddr} - ${fdt_addr_r}
+EOF
+mkimage -A arm -C none -T script -O u-boot -n "Redpesk boot script" -d /boot/bootscript.txt /boot/boot.scr
+cat /boot/bootscript.txt
+%end
+
+# Correctly set UUID in /etc/fstab
+%post --nochroot --logfile=/tmp/post-fstab.log --erroronfail
 echo "Setting UUID into /etc/fstab..."
 grep "^/dev.*Redpesk*" /mnt/sysroot/etc/fstab | while read part ; do
 	dev=$(echo $part | cut -d' ' -f1)
@@ -34,11 +51,12 @@ grep "^/dev.*Redpesk*" /mnt/sysroot/etc/fstab | while read part ; do
 	echo "dev=$dev UUID=$UUID label=$label"
 	sed -i "s|${dev}|UUID=\"${UUID}\"|g" /mnt/sysroot/etc/fstab
 done
+cat /mnt/sysroot/etc/fstab
 %end
 
 
 # /tmp and /var/tmp as tmpfs
-%post --logfile=/mnt/sysroot/tmp/post-tmp.log --erroronfail
+%post --logfile=/tmp/post-tmp.log --erroronfail
 echo "Enabling tmpfs for /tmp..."
 systemctl enable tmp.mount
 systemctl enable var-tmp.mount
