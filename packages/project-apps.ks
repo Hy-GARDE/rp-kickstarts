@@ -27,11 +27,18 @@ hygarde-image-config
 postgresql-server
 timescaledb-2-postgresql-16
 opensc
+openct
 openssl
 openssl-pkcs11-backport
-# FIXME - to add when build OK fsverity-utils
+fsverity-utils
 # FIXME - keyutils should be removed in final production image
 keyutils
+%end
+
+# Enable openct service
+%post --erroronfail
+echo "Enabling openct service..."
+systemctl enable openct.service
 %end
 
 # Setup SMACK labels for postgresql
