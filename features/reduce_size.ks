@@ -2,6 +2,7 @@
 %packages --ignoremissing --nocore --exclude-weakdeps
 -alsa-sof-firmware
 -langpacks-en
+-langpacks-en_GB
 -mozjs78
 -geolite2-country
 -geolite2-city
@@ -18,7 +19,7 @@ rm -rf /usr/share/man
 rm -rf /usr/share/doc
 
 #Clean DNF Cache
-dnf clean all
+dnf clean all && rm -rf /var/lib/dnf/history/*
 
 #Clean journal
 journalctl --rotate
