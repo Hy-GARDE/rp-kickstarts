@@ -33,6 +33,8 @@ openssl-pkcs11-backport
 fsverity-utils
 # FIXME - keyutils should be removed in final production image
 keyutils
+# this one (and its dependencies) is removed after use during firstboot
+timescaledb-tune
 %end
 
 # Enable openct service
