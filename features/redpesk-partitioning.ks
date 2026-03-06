@@ -20,6 +20,10 @@ tune2fs -O verity $(blkid /dev/mapper/Redpesk-OS* | grep "LABEL=.data" | cut -f1
 
 # Setup boot.scr used by uboot
 # /dev/mmcblk1p2 match partition / defined above
+%packages --ignoremissing --nocore --exclude-weakdeps
+uboot-tools
+%end
+
 %post --logfile=/tmp/post-uboot-bootscr.log --erroronfail
 echo "Boot into normal mode..."
 cat <<'EOF' > /boot/bootscript.txt
@@ -33,6 +37,8 @@ booti ${loadaddr} - ${fdt_addr_r}
 EOF
 mkimage -A arm -C none -T script -O u-boot -n "Redpesk boot script" -d /boot/bootscript.txt /boot/boot.scr
 cat /boot/bootscript.txt
+
+dnf remove -y uboot-tools
 %end
 
 # Correctly set UUID in /etc/fstab
