@@ -1,8 +1,9 @@
 
-%packages --ignoremissing --nocore --exclude-weakdeps
-NetworkManager-wifi
+# No wifi enable for Hygarde production image
+# %packages --ignoremissing --nocore --exclude-weakdeps
+# NetworkManager-wifi
 
-%end
+# %end
 
 %pre-install
 # disable systemd-networkd
