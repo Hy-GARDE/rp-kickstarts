@@ -46,7 +46,7 @@ systemctl enable openct.service
 # Enable PostgreSQL cluster initialization
 %post --erroronfail
 echo "Enabling postgres-hygarde-init service..."
-systemctl enable postgres-hygarde-init.service
+systemctl enable postgresql-hygarde-init.service
 %end
 
 # Setup SMACK labels for postgresql
