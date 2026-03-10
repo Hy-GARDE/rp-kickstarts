@@ -25,8 +25,8 @@ dnf clean all && rm -rf /var/lib/dnf/history/*
 journalctl --rotate
 journalctl --vacuum-time=1s
 
-#Clean logs and config
-rm -rf /var/log/anaconda /root/anaconda-ks.cfg
+#Clean anaconda config
+rm -rf /root/anaconda-ks.cfg
 
 #Clean local according filesystem rpm request
 for list in `rpm -ql filesystem | grep "/usr/share/locale/"`; do [[ $list != *"LC_MESSAGES" ]] && basename $list >> /tmp/filter ;done
