@@ -12,7 +12,7 @@
 # add security and network
 %include features/smack.ks
 %include features/extract_logs.ks
-%include features/networkmanager.ks
+%include features/networkd.ks
 
 # addition steps for production ready image
 %include features/reduce_size_prod.ks

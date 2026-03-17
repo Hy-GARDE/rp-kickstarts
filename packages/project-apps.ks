@@ -35,6 +35,8 @@ fsverity-utils
 keyutils
 # this one (and its dependencies) is removed after use during firstboot
 timescaledb-tune
+# this requires NetworkManager which we removed
+-dracut-live
 %end
 
 # Enable openct service
@@ -53,4 +55,10 @@ systemctl enable postgresql-hygarde-init.service
 %post --log /tmp/post-postgresql
 /bin/sh -c '([ ! -d /var/lib/pgsql ] || chsmack -a System -r /var/lib/pgsql)'
 /bin/sh -c '([ -d /var/run/postgresql ] && rmdir /var/run/postgresql; mkdir /var/run/postgresql; chown postgres:postgres /var/run/postgresql)'
+%end
+
+# Enable systemd-resolved
+%post --erroronfail
+echo "Enabling resolved service..."
+systemctl enable systemd-resolved.service
 %end

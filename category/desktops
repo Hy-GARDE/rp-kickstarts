@@ -1,3 +1,0 @@
-#file: category/desktops
-%include ../group/fonts
-%include ../group/gnome-desktop
